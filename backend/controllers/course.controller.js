@@ -55,36 +55,80 @@ export const createCourse = async (req, res) => {
 export const updateCourse = async (req, res) => {
   const adminId = req.adminId;
   const { courseId } = req.params;
-  const { title, description, price, image } = req.body;
+  const { title, description, price } = req.body;
   try {
-    const courseSearch = await Course.findById(courseId);
-    if (!courseSearch) {
+    const existingCourse = await Course.findById(courseId);
+    if (!existingCourse) {
       return res.status(404).json({ errors: "Course not found" });
     }
-    const course = await Course.findOneAndUpdate(
-      {
-        _id: courseId,
-        creatorId: adminId,
-      },
-      {
-        title,
-        description,
-        price,
-        image: {
-          public_id: image?.public_id,
-          url: image?.url,
-        },
+
+    const updateData = {
+      title: title || existingCourse.title,
+      description: description || existingCourse.description,
+      price: price || existingCourse.price,
+      image: existingCourse.image
+    };
+
+    if (req.files?.image) {
+      const image = req.files.image;
+      const allowedFormat = ["image/png", "image/jpeg", "image/jpg"];
+      if (!allowedFormat.includes(image.mimetype)) {
+        return res.status(400).json({ 
+          errors: "Invalid file format. Only PNG and JPG are allowed" 
+        });
       }
-    );
-    if (!course) {
-      return res
-        .status(404)
-        .json({ errors: "can't update, created by other admin" });
+
+      try {
+        const cloud_response = await cloudinary.uploader.upload(image.tempFilePath);        
+        if (!cloud_response || cloud_response.error) {
+          return res.status(400).json({ 
+            errors: "Error uploading file to cloudinary" 
+          });
+        }
+
+        if (existingCourse.image?.public_id) {
+          try {
+            await cloudinary.uploader.destroy(existingCourse.image.public_id);
+          } catch (deleteError) {
+            console.error('[UpdateCourse] Error deleting old image:', deleteError);
+          }
+        }
+
+        updateData.image = {
+          public_id: cloud_response.public_id,
+          url: cloud_response.secure_url || cloud_response.url
+        };
+      } catch (uploadError) {
+        console.error('[UpdateCourse] Cloudinary upload error:', uploadError);
+        return res.status(500).json({ 
+          errors: "Failed to upload image to Cloudinary",
+          details: uploadError.message
+        });
+      }
     }
-    res.status(201).json({ message: "Course updated successfully", course });
+
+    const updatedCourse = await Course.findOneAndUpdate(
+      { _id: courseId, creatorId: adminId },
+      updateData,
+      { new: true }
+    );
+
+    if (!updatedCourse) {
+      return res.status(403).json({ 
+        errors: "Cannot update: Course not found or you are not the creator" 
+      });
+    }
+
+    return res.status(200).json({ 
+      message: "Course updated successfully", 
+      course: updatedCourse 
+    });
   } catch (error) {
-    res.status(500).json({ errors: "Error in course updating" });
-    console.log("Error in course updating ", error);
+    console.error('[UpdateCourse] Unhandled error:', error);
+    return res.status(500).json({ 
+      errors: "Error in course updating",
+      details: error.message 
+    });
   }
 };
 

@@ -32,8 +32,8 @@ function AdminLogin() {
       console.log("AdminLogin successful: ", response.data);
       toast.success(response.data.message);
       setTimeout(() => {
-        navigate("/admin/dashboard");
-      }, 500);
+        navigate("/admin/our-courses");
+      }, 100);
       localStorage.setItem("admin", JSON.stringify(response.data));
     } catch (error) {
       if (error.response) {

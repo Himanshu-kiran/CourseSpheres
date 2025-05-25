@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
 import { BACKEND_URL } from "../utils/utils";
 
+
 function UpdateCourse() {
   const { id } = useParams();
 
@@ -53,7 +54,7 @@ function UpdateCourse() {
     formData.append("description", description);
     formData.append("price", price);
     if (image) {
-      formData.append("imageUrl", image);
+      formData.append("image", image);
     }
     const admin = JSON.parse(localStorage.getItem("admin"));
     const token = admin.token;
@@ -127,7 +128,7 @@ function UpdateCourse() {
               <label className="block text-lg">Course Image</label>
               <div className="flex items-center justify-center">
                 <img
-                  src={imagePreview ? `${imagePreview}` : "/imgPL.webp"}
+                  src={imagePreview ? `${imagePreview}` : "/img-preview.jpg"}
                   alt="Course"
                   className="w-full max-w-sm h-auto rounded-md object-cover"
                 />

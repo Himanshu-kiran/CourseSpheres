@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { FaCircleUser } from "react-icons/fa6";
@@ -77,7 +76,7 @@ function Courses() {
         isSidebarOpen={isSidebarOpen}
         toggleSidebar={toggleSidebar}
       />
-   
+
       {/* Main content */}
       <main className=" w-full bg-white p-10">
         <header className="flex justify-between items-center mb-10">
@@ -114,16 +113,16 @@ function Courses() {
                   key={course._id}
                   className="border border-gray-200 rounded-lg p-4 shadow-sm"
                 >
-                  <img
-                    src={course.image.url}
-                    alt={course.title}
-                    className="rounded mb-4"
-                  />
+                  <div className="w-full h-[150px] overflow-hidden rounded mb-4">
+                    <img
+                      src={course.image.url}
+                      alt={course.title}
+                      className="w-full h-full "
+                    />
+                  </div>
                   <h2 className="font-bold text-lg mb-2">{course.title}</h2>
-                  <p className="text-gray-600 mb-4">
-                    {course.description.length > 100
-                      ? `${course.description.slice(0, 100)}...`
-                      : course.description}
+                  <p className="text-gray-600 mb-4 line-clamp-4">
+                    {course.description}
                   </p>
                   <div className="flex justify-between items-center mb-4">
                     <span className="font-bold text-xl">

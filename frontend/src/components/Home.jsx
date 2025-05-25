@@ -177,14 +177,14 @@ function Home() {
             ))}
           </Slider>
         </section>
-<div className="mt-4 mb-6 flex flex-col items-center"> 
-  <Link
-    to="/admin"
-    className="bg-green-500 text-white py-2 px-4 rounded font-semibold hover:bg-white hover:text-black duration-300"
-  >
-    For Admin
-  </Link>
-</div>
+        <div className="mt-4 mb-6 flex flex-col items-center">
+          <Link
+            to="/admin/login"
+            className="bg-green-500 text-white py-2 px-4 rounded font-semibold hover:bg-white hover:text-black duration-300"
+          >
+            For Admin
+          </Link>
+        </div>
 
         <hr />
         {/* Footer */}
