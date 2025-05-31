@@ -1,1 +1,1 @@
-export const BACKEND_URL = "https://coursespheres.onrender.com";
+export const BACKEND_URL = "https://coursespheres.onrender.com/api/v1";
