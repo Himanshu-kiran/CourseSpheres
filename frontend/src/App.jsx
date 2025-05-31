@@ -1,12 +1,12 @@
 import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import Home from "./components/Home";
-import Login from "./components/Login";
-import Signup from "./components/Signup";
+import Home from "./pages/Home";
+import Login from "./pages//Login";
+import Signup from "./pages//Signup";
 import { Toaster } from "react-hot-toast";
-import Purchases from "./components/Purchases";
-import Buy from "./components/Buy";
-import Courses from "./components/Courses";
+import Purchases from "./pages//Purchases";
+import Buy from "./pages//Buy";
+import Courses from "./pages//Courses";
 import AdminSignup from "./admin/AdminSignup";
 import AdminLogin from "./admin/AdminLogin";
 import Dashboard from "./admin/Dashboard";
