@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../utils/utils";
-import AdminDashboardSidebar from "../Component/AdminDashboardSidebar.jsx"; 
+import AdminDashboardSidebar from "../components/AdminDashboardSidebar.jsx";
 function CourseCreate() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");

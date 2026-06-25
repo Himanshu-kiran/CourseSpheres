@@ -1,0 +1,131 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         Role     @default(STUDENT)
+  createdAt    DateTime @default(now())
+
+  enrollments  Enrollment[]
+  payments     Payment[]
+  progress     Progress[]
+  certificates Certificate[]
+  coursesCreated Course[] @relation("CourseInstructor")
+}
+
+enum Role {
+  STUDENT
+  ADMIN
+}
+
+model Course {
+  id           String   @id @default(uuid())
+  title        String
+  description  String
+  price        Int
+  thumbnailUrl String
+  isPublished        Boolean  @default(false)
+  isCertificateReady Boolean  @default(false)
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  instructorId String?
+  instructor   User?    @relation("CourseInstructor", fields: [instructorId], references: [id])
+
+  sections    Section[]
+  enrollments Enrollment[]
+
+  @@index([title])
+  @@index([createdAt])
+  @@index([instructorId])
+}
+
+model Section {
+  id       String  @id @default(uuid())
+  courseId String
+  course   Course  @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  title    String
+  order    Int
+
+  lectures Lecture[]
+
+  @@index([courseId])
+  @@unique([courseId, order]) // prevents duplicate order numbers
+}
+
+model Lecture {
+  id        String  @id @default(uuid())
+  sectionId String
+  section   Section @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  title     String
+  videoUrl  String
+  duration  Int     @default(0)
+  order     Int
+  isFree    Boolean @default(false)
+
+  progress Progress[]
+
+  @@index([sectionId])
+  @@unique([sectionId, order]) // prevents duplicate order number
+}
+
+model Enrollment {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  courseId   String
+  course     Course   @relation(fields: [courseId], references: [id])
+  enrolledAt DateTime @default(now())
+
+  @@unique([userId, courseId])
+}
+
+model Payment {
+  id              String        @id @default(uuid())
+  userId          String
+  user            User          @relation(fields: [userId], references: [id])
+  courseId        String
+  amount          Int
+  currency        String        @default("inr")
+  stripeSessionId String        @unique
+  status          PaymentStatus @default(PENDING)
+  createdAt       DateTime      @default(now())
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+model Progress {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  lectureId   String
+  lecture     Lecture  @relation(fields: [lectureId], references: [id])
+  completedAt DateTime @default(now())
+
+  @@unique([userId, lectureId])
+}
+
+model Certificate {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  courseId      String
+  cloudinaryUrl String
+  issuedAt      DateTime @default(now())
+
+  @@unique([userId, courseId])
+}

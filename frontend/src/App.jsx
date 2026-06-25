@@ -1,52 +1,51 @@
-import React from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
-import Home from "./pages/Home";
-import Login from "./pages//Login";
-import Signup from "./pages//Signup";
-import { Toaster } from "react-hot-toast";
-import Purchases from "./pages//Purchases";
-import Buy from "./pages//Buy";
-import Courses from "./pages//Courses";
-import AdminSignup from "./admin/AdminSignup";
-import AdminLogin from "./admin/AdminLogin";
-import Dashboard from "./admin/Dashboard";
-import CourseCreate from "./admin/CourseCreate";
-import UpdateCourse from "./admin/UpdateCourse";
-import OurCourses from "./admin/OurCourses";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import ProtectedRoute from './components/ProtectedRoute';
+
+// Pages
+import Home from './pages/public/Home';
+import CourseDetail from './pages/public/CourseDetail';
+import Login from './pages/auth/Login';
+import Register from './pages/auth/Register';
+import StudentDashboard from './pages/student/Dashboard';
+import MyCourses from './pages/student/MyCourses';
+import LearnCourse from './pages/student/LearnCourse';
+import PaymentSuccess from './pages/student/PaymentSuccess';
+import AdminDashboard from './pages/admin/Dashboard';
+import ManageCourses from './pages/admin/ManageCourses';
+import CourseBuilder from './pages/admin/CourseBuilder';
+
 function App() {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const admin = JSON.parse(localStorage.getItem("admin"));
   return (
-    <div>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+    <Router>
+      <div className="min-h-screen flex flex-col bg-stone-50">
+        <Navbar />
+        <main className="flex-grow flex flex-col">
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<Home />} />
+            <Route path="/courses/:id" element={<CourseDetail />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
 
-        {/* Other Routes */}
-        <Route path="/courses" element={<Courses />} />
-        <Route path="/buy/:courseId" element={<Buy />} />
-        <Route path="/purchases" element={<Purchases />}
-        />
-        {/*you can use below one if required 
-        <Route
-          path="/purchases"
-          element={user ? <Purchases /> : <Navigate to={"/login"} />}
-        />*/}
+            {/* Student Routes */}
+            <Route element={<ProtectedRoute allowedRoles={['STUDENT', 'ADMIN']} />}>
+              <Route path="/dashboard" element={<StudentDashboard />} />
+              <Route path="/my-courses" element={<MyCourses />} />
+              <Route path="/learn/:courseId" element={<LearnCourse />} />
+              <Route path="/payment/success" element={<PaymentSuccess />} />
+            </Route>
 
-        {/* Admin Routes */}
-        <Route path="/admin/signup" element={<AdminSignup />} />
-        <Route path="/admin/login" element={<AdminLogin />} />
-        <Route
-          path="/admin/dashboard"
-          element={admin ? <Dashboard /> : <Navigate to={"/admin/login"} />}
-        />
-        <Route path="/admin/create-course" element={<CourseCreate />} />
-        <Route path="/admin/update-course/:id" element={<UpdateCourse />} />
-        <Route path="/admin/our-courses" element={<OurCourses />} />
-      </Routes>
-      <Toaster />
-    </div>
+            {/* Admin Routes */}
+            <Route element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/courses" element={<ManageCourses />} />
+              <Route path="/admin/courses/builder/:courseId" element={<CourseBuilder />} />
+            </Route>
+          </Routes>
+        </main>
+      </div>
+    </Router>
   );
 }
 

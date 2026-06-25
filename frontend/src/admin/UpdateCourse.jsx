@@ -26,8 +26,8 @@ function UpdateCourse() {
         setTitle(data.course.title);
         setDescription(data.course.description);
         setPrice(data.course.price);
-        setImage(data.course.image.url);
-        setImagePreview(data.course.image.url);
+        setImage(data.course.thumbnailUrl);
+        setImagePreview(data.course.thumbnailUrl);
         setLoading(false);
       } catch (error) {
         console.log(error);

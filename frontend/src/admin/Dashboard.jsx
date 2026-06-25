@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import logo from "../../public/logo.webp";
+const logo = "/logo.webp";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { BACKEND_URL } from "../utils/utils";

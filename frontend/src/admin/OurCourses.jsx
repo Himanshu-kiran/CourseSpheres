@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../utils/utils";
-import AdminDashboardSidebar from "../Component/AdminDashboardSidebar";
+import AdminDashboardSidebar from "../components/AdminDashboardSidebar";
 
 function OurCourses() {
   const [courses, setCourses] = useState([]);
@@ -55,7 +55,7 @@ function OurCourses() {
         }
       );
       toast.success(response.data.message);
-      setCourses((prev) => prev.filter((c) => c._id !== id));
+      setCourses((prev) => prev.filter((c) => c.id !== id));
     } catch (error) {
       console.error("Error deleting course:", error);
       toast.error(error.response?.data?.errors || "Error deleting course");
@@ -80,9 +80,9 @@ function OurCourses() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {courses.map((course) => (
-                <div key={course._id} className="bg-white shadow-md rounded-lg p-4 border border-gray-200">
+                <div key={course.id} className="bg-white shadow-md rounded-lg p-4 border border-gray-200">
                   <img
-                    src={course?.image?.url}
+                    src={course?.thumbnailUrl}
                     alt={course.title}
                     className="h-40 w-full object-cover rounded-t-lg"
                   />
@@ -102,16 +102,22 @@ function OurCourses() {
                     <div className="text-green-600 text-sm mt-2">10% off</div>
                   </div>
 
-                  <div className="flex justify-between">
+                  <div className="flex justify-between flex-wrap gap-2 mt-4">
                     <Link
-                      to={`/admin/update-course/${course._id}`}
-                      className="bg-orange-500 text-white py-2 px-4 mt-4 rounded hover:bg-blue-600"
+                      to={`/admin/update-course/${course.id}`}
+                      className="bg-orange-500 text-white py-2 px-4 rounded hover:bg-orange-600 flex-1 text-center"
                     >
                       Update
                     </Link>
+                    <Link
+                      to={`/admin/course/${course.id}/curriculum`}
+                      className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 flex-1 text-center"
+                    >
+                      Curriculum
+                    </Link>
                     <button
-                      onClick={() => handleDelete(course._id)}
-                      className="bg-red-500 text-white py-2 px-4 mt-4 rounded hover:bg-red-600"
+                      onClick={() => handleDelete(course.id)}
+                      className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 w-full"
                     >
                       Delete
                     </button>
