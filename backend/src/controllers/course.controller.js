@@ -58,6 +58,32 @@ export const getAllCoursesAdmin = async (req, res) => {
   }
 };
 
+export const getInstructorStats = async (req, res) => {
+  try {
+    const courses = await prisma.course.findMany({
+      where: { instructorId: req.user.id },
+      include: {
+        _count: { select: { enrollments: true } }
+      }
+    });
+
+    const totalCourses = courses.length;
+    let totalStudents = 0;
+    let totalRevenue = 0;
+
+    courses.forEach(course => {
+      const enrollmentsCount = course._count.enrollments;
+      totalStudents += enrollmentsCount;
+      totalRevenue += enrollmentsCount * course.price;
+    });
+
+    res.json({ totalCourses, totalStudents, totalRevenue });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 export const getCourseById = async (req, res) => {
   try {
     const course = await prisma.course.findUnique({

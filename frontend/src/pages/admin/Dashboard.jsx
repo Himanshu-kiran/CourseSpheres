@@ -1,7 +1,29 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Users, DollarSign, PlusCircle } from 'lucide-react';
+import { BookOpen, Users, DollarSign, PlusCircle, Loader2 } from 'lucide-react';
+import api from '../../lib/axios';
 
 const AdminDashboard = () => {
+  const [stats, setStats] = useState({
+    totalCourses: 0,
+    totalStudents: 0,
+    totalRevenue: 0,
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const { data } = await api.get('/courses/admin/stats');
+        setStats(data);
+      } catch (error) {
+        console.error('Failed to fetch stats', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchStats();
+  }, []);
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="flex justify-between items-center mb-8">
@@ -26,7 +48,9 @@ const AdminDashboard = () => {
             </div>
             <div className="ml-5">
               <p className="text-sm font-medium text-stone-500">Total Courses</p>
-              <p className="text-3xl font-semibold text-stone-900">Manage</p>
+              <p className="text-3xl font-semibold text-stone-900">
+                {loading ? <Loader2 className="animate-spin h-6 w-6 mt-2 text-stone-400" /> : stats.totalCourses}
+              </p>
             </div>
           </div>
         </div>
@@ -38,7 +62,9 @@ const AdminDashboard = () => {
             </div>
             <div className="ml-5">
               <p className="text-sm font-medium text-stone-500">Total Students</p>
-              <p className="text-3xl font-semibold text-stone-900">N/A</p>
+              <p className="text-3xl font-semibold text-stone-900">
+                {loading ? <Loader2 className="animate-spin h-6 w-6 mt-2 text-stone-400" /> : stats.totalStudents}
+              </p>
             </div>
           </div>
         </div>
@@ -50,7 +76,9 @@ const AdminDashboard = () => {
             </div>
             <div className="ml-5">
               <p className="text-sm font-medium text-stone-500">Total Revenue</p>
-              <p className="text-3xl font-semibold text-stone-900">N/A</p>
+              <p className="text-3xl font-semibold text-stone-900">
+                {loading ? <Loader2 className="animate-spin h-6 w-6 mt-2 text-stone-400" /> : `₹${stats.totalRevenue}`}
+              </p>
             </div>
           </div>
         </div>

@@ -18,6 +18,7 @@ const CourseBuilder = () => {
   const [price, setPrice] = useState(0);
   const [thumbnailUrl, setThumbnailUrl] = useState('');
   const [isPublished, setIsPublished] = useState(false);
+  const [isCertificateReady, setIsCertificateReady] = useState(false);
 
   // New section form
   const [newSectionTitle, setNewSectionTitle] = useState('');
@@ -38,6 +39,7 @@ const CourseBuilder = () => {
         setPrice(data.price);
         setThumbnailUrl(data.thumbnailUrl || '');
         setIsPublished(data.isPublished);
+        setIsCertificateReady(data.isCertificateReady);
       }
     } catch (error) {
       console.error('Failed to fetch course', error);
@@ -63,10 +65,11 @@ const CourseBuilder = () => {
         price: Number(price),
         thumbnailUrl: thumbnailUrl || undefined,
         isPublished,
+        isCertificateReady,
       });
-      setCourse(data);
+      setCourse(prev => ({ ...prev, ...data }));
       setSaveMsg('Saved successfully!');
-      setTimeout(() => setSaveMsg(''), 3000);
+      setTimeout(() => navigate('/admin/courses'), 1000);
     } catch (error) {
       console.error('Failed to save course', error);
       setSaveMsg('Failed to save.');
@@ -336,6 +339,22 @@ const CourseBuilder = () => {
                 </label>
                 <span className={`ml-auto inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${isPublished ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}`}>
                   {isPublished ? 'Live' : 'Draft'}
+                </span>
+              </div>
+
+              <div className="flex items-center space-x-3">
+                <input
+                  id="isCertificateReady"
+                  type="checkbox"
+                  checked={isCertificateReady}
+                  onChange={(e) => setIsCertificateReady(e.target.checked)}
+                  className="h-4 w-4 text-amber-600 focus:ring-amber-500 border-stone-300 rounded"
+                />
+                <label htmlFor="isCertificateReady" className="text-sm font-medium text-stone-700">
+                  Certificates Ready
+                </label>
+                <span className={`ml-auto inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${isCertificateReady ? 'bg-green-100 text-green-800' : 'bg-stone-100 text-stone-800'}`}>
+                  {isCertificateReady ? 'Enabled' : 'Disabled'}
                 </span>
               </div>
 
