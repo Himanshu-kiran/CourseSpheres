@@ -58,7 +58,7 @@ const ManageCourses = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div className="w-full px-4 sm:px-8 lg:px-12 py-10">
       <div className="flex justify-between items-center mb-8">
         <div>
           <h1 className="text-3xl font-serif font-bold text-stone-900">Manage Courses</h1>

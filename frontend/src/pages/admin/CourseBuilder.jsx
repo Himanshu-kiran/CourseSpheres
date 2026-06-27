@@ -27,15 +27,18 @@ const CourseBuilder = () => {
   const [newLectureTitle, setNewLectureTitle] = useState('');
   const [newLectureVideo, setNewLectureVideo] = useState(null);
 
-  const fetchCourse = async () => {
+  const fetchCourse = async (resetForm = false) => {
     try {
       const { data } = await api.get(`/courses/${courseId}`);
       setCourse(data);
-      setTitle(data.title);
-      setDescription(data.description);
-      setPrice(data.price);
-      setThumbnailUrl(data.thumbnailUrl || '');
-      setIsPublished(data.isPublished);
+      
+      if (resetForm) {
+        setTitle(data.title);
+        setDescription(data.description);
+        setPrice(data.price);
+        setThumbnailUrl(data.thumbnailUrl || '');
+        setIsPublished(data.isPublished);
+      }
     } catch (error) {
       console.error('Failed to fetch course', error);
       alert('Course not found');
@@ -46,7 +49,7 @@ const CourseBuilder = () => {
   };
 
   useEffect(() => {
-    fetchCourse();
+    fetchCourse(true);
   }, [courseId]);
 
   const handleSaveCourseDetails = async (e) => {
