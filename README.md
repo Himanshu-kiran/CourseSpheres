@@ -1,9 +1,10 @@
- A full stack (dynamic/responsive) course selling application along with admin panel, payment gateway (using Stripe) , crafted with 𝗠𝗼𝗻𝗴𝗼𝗗𝗕, 𝗘𝘅𝗽𝗿𝗲𝘀𝘀.𝗷𝘀, 𝗥𝗲𝗮𝗰𝘁.𝗷𝘀, 𝗮𝗻𝗱 𝗡𝗼𝗱𝗲.𝗷𝘀.
+A full stack (dynamic/responsive) course selling application along with admin panel, payment gateway (using Stripe) , crafted with Postgresql, 𝗘𝘅𝗽𝗿𝗲𝘀𝘀.𝗷𝘀, 𝗥𝗲𝗮𝗰𝘁.𝗷𝘀, 𝗮𝗻𝗱 𝗡𝗼𝗱𝗲.𝗷𝘀.
 ------------------------------------------------
 
 Used Technologies :- 
 
-𝗠𝗼𝗻𝗴𝗼𝗗𝗕 :- It's a NoSQL DB.
+Postgresqql :- It's a SQL DB.
+Prisma :- ORM (Object Relational Mapping)
 
 𝗘𝘅𝗽𝗿𝗲𝘀𝘀 𝗝𝘀 :- It's a Node Js Framework(Backend)
 
